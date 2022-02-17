@@ -12,8 +12,6 @@ interface StepProps {
 
 const Step: React.FC<StepProps> = ({ icon, name, title, label }) => {
   const { activeStep, stepsDone } = useSteps();
-  console.log(name, activeStep === name);
-  console.log(name, stepsDone);
 
   const isActive = useMemo(() => activeStep === name, [activeStep]);
   const isDone = useMemo(

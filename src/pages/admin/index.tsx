@@ -52,14 +52,20 @@ const AdminDashboard: React.FC = () => {
             size="lg"
             variant="solid"
             colorScheme="green"
-            onClick={()=>router.push('/admin/new-school')}
+            onClick={() => router.push('/admin/new-school')}
           >
             Novo Gestor
           </Button>
         </Flex>
         <Grid templateColumns="repeat(3, 1fr)" gap={6} marginTop="8">
           {[1, 2, 3, 4, 5].map((i) => (
-            <GridItem w="100%" bg="gray.50" padding="4" borderRadius="xl">
+            <GridItem
+              key={i}
+              w="100%"
+              bg="gray.50"
+              padding="4"
+              borderRadius="xl"
+            >
               <Flex>
                 <Icon as={RiBuilding2Line} w="8" h="8" color="green.600" />
                 <Box direction="column" marginLeft="4">
