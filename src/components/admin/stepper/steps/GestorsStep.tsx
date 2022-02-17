@@ -1,14 +1,20 @@
+import React, { useState } from 'react';
+import * as yup from 'yup';
 import { Input } from '@/components/form/Input';
 import { useSteps } from '@/hooks/useSteps';
 import { Box, Button, Flex, Icon, Text, VStack } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { RiMailUnreadLine } from 'react-icons/ri';
 
 export default function GestorsStep() {
   const { activeStep, steps, changeStep } = useSteps();
   const [emails, setEmails] = useState<string[]>([]);
-  const { register, getValues } = useForm();
+  const { register, getValues, handleSubmit, formState } = useForm({
+    resolver: yupResolver(
+      yup.object().shape({ email: yup.string().email('Não é um email').required('Email obrigatório') })
+    ),
+  });
 
   function addEmailInWaitlist() {
     setEmails([...emails, getValues('email')]);
@@ -31,13 +37,14 @@ export default function GestorsStep() {
         </Text>
       </Box>
       <Box marginTop="4">
-        <Flex>
-          <Input placeholder="Email" name="email" {...register('email')} />
-          <Button
-            colorScheme="green"
-            marginLeft="4"
-            onClick={addEmailInWaitlist}
-          >
+        <Flex as="form" onSubmit={handleSubmit(addEmailInWaitlist)}>
+          <Input
+            placeholder="Email"
+            name="email"
+            error={formState?.errors?.email}
+            {...register('email')}
+          />
+          <Button colorScheme="green" marginLeft="4" type="submit">
             Adicionar
           </Button>
         </Flex>
