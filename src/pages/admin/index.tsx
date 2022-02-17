@@ -9,12 +9,16 @@ import {
   GridItem,
   Icon,
   Image,
+  Link,
   Spacer,
   Text,
 } from '@chakra-ui/react';
 import { RiBuilding2Line } from 'react-icons/ri';
+import { useRouter } from 'next/router';
 
 const AdminDashboard: React.FC = () => {
+  const router = useRouter();
+
   return (
     <Flex direction="column">
       <AdminSidebar />
@@ -44,7 +48,12 @@ const AdminDashboard: React.FC = () => {
             </Box>
           </Flex>
           <Spacer />
-          <Button size="lg" variant="solid" colorScheme="green">
+          <Button
+            size="lg"
+            variant="solid"
+            colorScheme="green"
+            onClick={()=>router.push('/admin/new-school')}
+          >
             Novo Gestor
           </Button>
         </Flex>
