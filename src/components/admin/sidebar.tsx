@@ -3,7 +3,7 @@ import React from 'react';
 
 const AdminSidebar: React.FC = () => {
   return (
-    <Flex background="gray.50" padding="4" justify="center">
+    <Flex background="gray.50" padding="4" justify="center" _hover="gray.200">
       <Image src="https://user-images.githubusercontent.com/49327985/154309877-cd022fe2-feb8-4193-b61a-baea24104eec.svg" />
       <Spacer />
       <Flex>
