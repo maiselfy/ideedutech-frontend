@@ -23,8 +23,13 @@ const AdminDashboard: React.FC = () => {
     <Flex direction="column">
       <AdminSidebar />
       <Container maxW="container.xl" marginTop="4">
-        <Flex align="center">
-          <Flex align="center">
+        <Flex align="center" flexDir={['column', 'column', 'row']}>
+          <Flex
+            align="center"
+            justifyContent={['space-around', 'space-around', 'flex-start']}
+            marginBottom={['8', '8', '0']}
+            w="100%"
+          >
             <Box
               w="20"
               h="20"
@@ -53,11 +58,20 @@ const AdminDashboard: React.FC = () => {
             variant="solid"
             colorScheme="green"
             onClick={() => router.push('/admin/new-school')}
+            w={{ base: '100%', md: '200px' }}
           >
             Novo Gestor
           </Button>
         </Flex>
-        <Grid templateColumns="repeat(3, 1fr)" gap={6} marginTop="8">
+        <Grid
+          templateColumns={{
+            base: 'repeat(1, 1fr)',
+            md: 'repeat(2, 1fr)',
+            lg: 'repeat(3, 1fr)',
+          }}
+          gap={6}
+          marginTop="8"
+        >
           {[1, 2, 3, 4, 5].map((i) => (
             <GridItem
               key={i}
