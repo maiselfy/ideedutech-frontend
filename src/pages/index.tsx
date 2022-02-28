@@ -1,4 +1,5 @@
 import { Input } from '@/components/form/Input';
+import * as yup from 'yup';
 import { InputPassword } from '@/components/form/InputPassword';
 import {
   Box,
@@ -11,8 +12,31 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+interface UserData {
+  email: string;
+  password: string;
+}
+
+const userSchema = yup.object().shape({
+  email: yup.string().email('Não é um email').required('Email obrigatório'),
+
+  password: yup
+    .string()
+    .min(6, 'No mínimo 6 caracteres')
+    .required('A senha é obrigatório'),
+});
 
 export default function Home() {
+  const { register, getValues, handleSubmit, formState } = useForm({
+    resolver: yupResolver(userSchema),
+  });
+
+  const handleSignIn = async (data: UserData) => {
+    console.log({ ...data });
+  };
+
   return (
     <Flex
       w="100%"
@@ -41,10 +65,20 @@ export default function Home() {
             marginTop="8"
             src="https://user-images.githubusercontent.com/49327985/154309877-cd022fe2-feb8-4193-b61a-baea24104eec.svg"
           />
-          <VStack spacing="4">
-            <Input label="E-mail/Matrícula" />
+          <VStack spacing="4" as="form" onSubmit={handleSubmit(handleSignIn)}>
+            <Input
+              label="E-mail"
+              name="email"
+              error={formState.errors.email}
+              {...register('email')}
+            />
             <Box w="100%">
-              <InputPassword label="Senha" />
+              <InputPassword
+                label="Senha"
+                name="password"
+                error={formState.errors.password}
+                {...register('password')}
+              />
               <Link fontSize="x-small" color="green.600">
                 Esqueci minha senha
               </Link>
@@ -55,7 +89,12 @@ export default function Home() {
               justify="center"
               alignItems="center"
             >
-              <Button colorScheme="green" w="100%" marginBottom="2">
+              <Button
+                colorScheme="green"
+                w="100%"
+                marginBottom="2"
+                type="submit"
+              >
                 Entrar
               </Button>
               <Link fontSize="sm" color="gray.400">
