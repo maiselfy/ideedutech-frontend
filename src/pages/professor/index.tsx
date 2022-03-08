@@ -19,6 +19,8 @@ import ProfessorSideBar from '@/components/professor/ProfessorSideBar';
 import {
   RiBookLine,
   RiCalendarLine,
+  RiListCheck,
+  RiListCheck2,
   RiMore2Line,
   RiTeamLine,
 } from 'react-icons/ri';
@@ -27,7 +29,7 @@ const ProfessorDashboard: React.FC = () => {
   return (
     <Flex flexDirection="column">
       <ProfessorSideBar />
-      <SimpleGrid columns={3} spacing={16}>
+      <SimpleGrid columns={3} spacing="4">
         <Flex flex="1" flexDirection="column" p="4">
           <Text fontSize="3xl" fontWeight="bold">
             Atividades
@@ -42,7 +44,16 @@ const ProfessorDashboard: React.FC = () => {
                 borderRadius="lg"
               >
                 <Flex justifyContent="center" align="center">
-                  <Box display="flex" alignItems="center" justifyContent="center" w="12" h="12" bg="green.100" mr="2" borderRadius="md">
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    w="12"
+                    h="12"
+                    bg="green.100"
+                    mr="2"
+                    borderRadius="md"
+                  >
                     <Img
                       w="8"
                       h="8"
@@ -108,10 +119,36 @@ const ProfessorDashboard: React.FC = () => {
             ))}
           </VStack>
         </Flex>
-        <Flex flex="1">
+        <Flex flex="1" flexDirection="column" p="4">
           <Text fontSize="3xl" fontWeight="bold">
             Avaliações
           </Text>
+          <VStack spacing="4">
+            {[1, 2, 3].map((x) => (
+              <Flex
+                bg="gray.50"
+                p="4"
+                borderRadius="md"
+                w="100%"
+                justify="space-around"
+                align="center"
+              >
+                <Box>
+                  <Text fontWeight="bold" fontSize="lg">
+                    Mar, 25
+                  </Text>
+                  <Text fontSize="smaller">7:30 - 9:30</Text>
+                </Box>
+                <Text>Geografia</Text>
+                <Text>3 ano A</Text>
+                <IconButton
+                  variant="ghost"
+                  colorScheme="green"
+                  icon={<RiListCheck2 size={24} />}
+                />
+              </Flex>
+            ))}
+          </VStack>
         </Flex>
         <Flex bgColor="gray.50" height="100vh"></Flex>
       </SimpleGrid>
