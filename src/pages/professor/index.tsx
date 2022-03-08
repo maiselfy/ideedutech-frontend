@@ -24,6 +24,7 @@ import {
   RiMore2Line,
   RiTeamLine,
 } from 'react-icons/ri';
+import Calendar from '@/components/calendar';
 
 const ProfessorDashboard: React.FC = () => {
   return (
@@ -150,7 +151,9 @@ const ProfessorDashboard: React.FC = () => {
             ))}
           </VStack>
         </Flex>
-        <Flex bgColor="gray.50" height="100vh"></Flex>
+        <Flex bgColor="gray.50" height="100vh">
+          <Calendar/>
+        </Flex>
       </SimpleGrid>
     </Flex>
   );
