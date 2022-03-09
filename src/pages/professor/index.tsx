@@ -14,7 +14,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ProfessorSideBar from '@/components/professor/ProfessorSideBar';
 import {
   RiBookLine,
@@ -25,8 +25,32 @@ import {
   RiTeamLine,
 } from 'react-icons/ri';
 import Calendar from '@/components/calendar';
+import { api } from '@/services/api';
+
+interface Task {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  discipline: string;
+  type: 'task' | 'presentation';
+  class: {
+    name: string;
+    total: number;
+    missingStudents: [{ avatar: string }];
+  };
+}
 
 const ProfessorDashboard: React.FC = () => {
+  const [tasks, setTasks] = useState<Task>([]);
+  useEffect(() => {
+    async function loadData() {
+      const response = await api.get('/tasks');
+      setTasks(response.data);
+    }
+    loadData();
+  }, []);
+
   return (
     <Flex flexDirection="column">
       <ProfessorSideBar />
@@ -36,8 +60,9 @@ const ProfessorDashboard: React.FC = () => {
             Atividades
           </Text>
           <VStack spacing="4">
-            {[1, 2, 3, 4, 5, 6].map((x) => (
+            {tasks.map((task: Task) => (
               <Flex
+                key={task.id}
                 bgColor="gray.50"
                 w="100%"
                 flexDirection="column"
@@ -62,54 +87,36 @@ const ProfessorDashboard: React.FC = () => {
                     />
                   </Box>
                   <Box>
-                    <Text fontSize="x-small">APRESENTAÇÃO</Text>
-                    <Text fontWeight="medium">Conflito na síria</Text>
+                    <Text fontSize="x-small">{task.type.toUpperCase()}</Text>
+                    <Text fontWeight="medium">{task.title}</Text>
                   </Box>
                   <Spacer />
                   <IconButton variant="ghost" icon={<RiMore2Line />} />
                 </Flex>
                 <Flex paddingTop="4" paddingBottom="4">
-                  <Text>
-                    Apresentação sobre os conflitos da síria, com no mínimo 10
-                    slides, em grupo de 3 alunos.
-                  </Text>
+                  <Text>{task.description}</Text>
                 </Flex>
                 <Box>
                   <HStack>
                     <Flex justifyContent="center" align="center">
                       <Icon as={RiBookLine} color="green.600" mr="2" />
-                      <Text>Geografia</Text>
+                      <Text>{task.discipline}</Text>
                     </Flex>
                     <Flex justifyContent="center" align="center">
                       <Icon as={RiTeamLine} color="green.600" mr="2" />
-                      <Text>3 ano C</Text>
+                      <Text>{task.class.name}</Text>
                     </Flex>
                   </HStack>
                   <Flex justifyContent="space-between" mt="2">
                     <Flex align="center" justifyContent="center">
                       <AvatarGroup size="sm" max={2} mr="2">
-                        <Avatar
-                          name="Ryan Florence"
-                          src="https://bit.ly/ryan-florence"
-                        />
-                        <Avatar
-                          name="Segun Adebayo"
-                          src="https://bit.ly/sage-adebayo"
-                        />
-                        <Avatar
-                          name="Kent Dodds"
-                          src="https://bit.ly/kent-c-dodds"
-                        />
-                        <Avatar
-                          name="Prosper Otemuyiwa"
-                          src="https://bit.ly/prosper-baba"
-                        />
-                        <Avatar
-                          name="Christian Nwamba"
-                          src="https://bit.ly/code-beast"
-                        />
+                        {task.class.missingStudents.map(
+                          (student:{avatar:string}) => (
+                            <Avatar name="Ryan Florence" src={student.avatar} />
+                          )
+                        )}
                       </AvatarGroup>
-                      <Text fontSize="sm">12/45 concluídos</Text>
+                      <Text fontSize="sm">{`${task.class.total - task.class.missingStudents.length}/${task.class.total} concluídos`}</Text>
                     </Flex>
                     <Button leftIcon={<RiCalendarLine />}>
                       <Text fontWeight="normal">Não Iniciada</Text>
@@ -127,6 +134,7 @@ const ProfessorDashboard: React.FC = () => {
           <VStack spacing="4">
             {[1, 2, 3].map((x) => (
               <Flex
+                key={x}
                 bg="gray.50"
                 p="4"
                 borderRadius="md"
@@ -152,7 +160,7 @@ const ProfessorDashboard: React.FC = () => {
           </VStack>
         </Flex>
         <Flex bgColor="gray.50" height="100vh">
-          <Calendar/>
+          <Calendar />
         </Flex>
       </SimpleGrid>
     </Flex>
