@@ -96,5 +96,37 @@
       "date": "2021-03-02",
       "discipline": "Geografia"
     }
+  ],
+  "exams": [
+    {
+      "id": 1,
+      "date": "2021-03-02",
+      "initialHour": "7:30",
+      "endHour": "9:30",
+      "discipline": "Geografia",
+      "class": {
+        "name": "2 ano C"
+      }
+    },
+    {
+      "id": 1,
+      "date": "2021-03-02",
+      "initialHour": "7:30",
+      "endHour": "9:30",
+      "discipline": "Geografia",
+      "class": {
+        "name": "2 ano C"
+      }
+    },
+    {
+      "id": 1,
+      "date": "2021-03-02",
+      "initialHour": "7:30",
+      "endHour": "9:30",
+      "discipline": "Geografia",
+      "class": {
+        "name": "2 ano C"
+      }
+    }
   ]
 }

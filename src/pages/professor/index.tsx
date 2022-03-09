@@ -26,6 +26,7 @@ import {
 } from 'react-icons/ri';
 import Calendar from '@/components/calendar';
 import { api } from '@/services/api';
+import { format } from 'date-fns';
 
 interface Task {
   id: string;
@@ -41,14 +42,27 @@ interface Task {
   };
 }
 
+interface Exam {
+  id: number;
+  date: string;
+  initialHour: string;
+  endHour: string;
+  discipline: string;
+  class: {
+    name: string;
+  };
+}
+
 const ProfessorDashboard: React.FC = () => {
-  const [tasks, setTasks] = useState<Task>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [exams, setExams] = useState<Exam[]>([]);
   useEffect(() => {
-    async function loadData() {
-      const response = await api.get('/tasks');
-      setTasks(response.data);
-    }
-    loadData();
+    const getTasks = api.get('/tasks');
+    const getExams = api.get('/exams');
+    Promise.allSettled([getTasks, getExams]).then((results) => {
+      if (results[0].status === 'fulfilled') setTasks(results[0].value.data);
+      if (results[1].status === 'fulfilled') setExams(results[1].value.data);
+    });
   }, []);
 
   return (
@@ -111,12 +125,14 @@ const ProfessorDashboard: React.FC = () => {
                     <Flex align="center" justifyContent="center">
                       <AvatarGroup size="sm" max={2} mr="2">
                         {task.class.missingStudents.map(
-                          (student:{avatar:string}) => (
+                          (student: { avatar: string }) => (
                             <Avatar name="Ryan Florence" src={student.avatar} />
                           )
                         )}
                       </AvatarGroup>
-                      <Text fontSize="sm">{`${task.class.total - task.class.missingStudents.length}/${task.class.total} concluídos`}</Text>
+                      <Text fontSize="sm">{`${
+                        task.class.total - task.class.missingStudents.length
+                      }/${task.class.total} concluídos`}</Text>
                     </Flex>
                     <Button leftIcon={<RiCalendarLine />}>
                       <Text fontWeight="normal">Não Iniciada</Text>
@@ -132,9 +148,9 @@ const ProfessorDashboard: React.FC = () => {
             Avaliações
           </Text>
           <VStack spacing="4">
-            {[1, 2, 3].map((x) => (
+            {exams.map((exam) => (
               <Flex
-                key={x}
+                key={exam.id}
                 bg="gray.50"
                 p="4"
                 borderRadius="md"
@@ -144,12 +160,12 @@ const ProfessorDashboard: React.FC = () => {
               >
                 <Box>
                   <Text fontWeight="bold" fontSize="lg">
-                    Mar, 25
+                    {format(new Date(exam.date),'MMMM, dd')}
                   </Text>
-                  <Text fontSize="smaller">7:30 - 9:30</Text>
+                  <Text fontSize="smaller">{`${exam.initialHour} - ${exam.endHour}`}</Text>
                 </Box>
-                <Text>Geografia</Text>
-                <Text>3 ano A</Text>
+                <Text>{exam.discipline}</Text>
+                <Text>{exam.class.name}</Text>
                 <IconButton
                   variant="ghost"
                   colorScheme="green"
