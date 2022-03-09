@@ -160,7 +160,7 @@ const ProfessorDashboard: React.FC = () => {
               >
                 <Box>
                   <Text fontWeight="bold" fontSize="lg">
-                    {format(new Date(exam.date),'MMMM, dd')}
+                    {format(new Date(exam.date), 'MMMM, dd')}
                   </Text>
                   <Text fontSize="smaller">{`${exam.initialHour} - ${exam.endHour}`}</Text>
                 </Box>
@@ -175,7 +175,10 @@ const ProfessorDashboard: React.FC = () => {
             ))}
           </VStack>
         </Flex>
-        <Flex bgColor="gray.50" height="100vh">
+        <Flex bgColor="gray.50" height="100vh" flexDir="column" p="4">
+          <Text fontSize="3xl" fontWeight="bold">
+            Atividades
+          </Text>
           <Calendar />
         </Flex>
       </SimpleGrid>

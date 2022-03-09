@@ -19,6 +19,7 @@ import {
   startOfWeek,
   subMonths,
 } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
 import React, { useState } from 'react';
 import { RiArrowLeftLine, RiArrowRightLine } from 'react-icons/ri';
 
@@ -32,20 +33,34 @@ const Calendar: React.FC = () => {
     for (let day = 0; day < 7; day++) {
       const cloneDate = currentDate;
       week.push(
-        <Flex justifyContent="center" alignItems="center">
-        <Text
-          variant={isSameDay(currentDate, new Date()) ? 'solid' : 'ghost'}
-          colorScheme={isSameDay(currentDate, new Date()) ? 'green' : 'ghost'}
-          className={`day ${
-            isSameMonth(currentDate, activeDate) ? '' : 'inactiveDay'
-          } ${isSameDay(currentDate, selectedDate) ? 'selectedDay' : ''}
-          ${isSameDay(currentDate, new Date()) ? 'today' : ''}`}
-          onClick={() => {
-            setSelectedDate(cloneDate);
+        <Flex
+          cursor="pointer"
+          w="12"
+          h="12"
+          justifyContent="center"
+          borderRadius="md"
+          alignItems="center"
+          bgColor={
+            isSameDay(currentDate, new Date()) ? 'green.100' : 'transparent'
+          }
+          _hover={{
+            bgColor: isSameDay(currentDate, new Date())
+              ? 'green.200'
+              : 'gray.100',
           }}
         >
-          {format(currentDate, 'd')}
-        </Text></Flex>
+          <Text
+            color={
+              isSameDay(currentDate, new Date()) ? 'green.600' : 'gray.600'
+            }
+            fontWeight={isSameDay(currentDate, new Date()) ? 'bold' : '400'}
+            onClick={() => {
+              setSelectedDate(cloneDate);
+            }}
+          >
+            {format(currentDate, 'd')}
+          </Text>
+        </Flex>
       );
       currentDate = addDays(currentDate, 1);
     }
@@ -54,14 +69,21 @@ const Calendar: React.FC = () => {
 
   const getHeader = () => {
     return (
-      <Flex>
-        <Text>{format(activeDate, 'MMMM yyyy')}</Text>
+      <Flex justifyContent="center" align="center" mb="4">
+        <Text color="green.600" fontWeight="bold">
+          {format(activeDate, 'MMMM, yyyy',{ locale: ptBR})}
+        </Text>
         <Spacer />
         <IconButton
+          variant="outline"
+          colorScheme="green"
           icon={<RiArrowLeftLine />}
           onClick={() => setActiveDate(subMonths(activeDate, 1))}
         />
         <IconButton
+          ml="2"
+          variant="outline"
+          colorScheme="green"
           icon={<RiArrowRightLine />}
           onClick={() => setActiveDate(addMonths(activeDate, 1))}
         />
@@ -73,13 +95,13 @@ const Calendar: React.FC = () => {
     const weekDays = [];
     for (let day = 0; day < 7; day++) {
       weekDays.push(
-        <Text className="day weekNames">
-          {format(addDays(weekStartDate, day), 'E')}
+        <Text textAlign="center">
+          {format(addDays(weekStartDate, day), 'EEEEEE', { locale: ptBR })}
         </Text>
       );
     }
     return (
-      <SimpleGrid columns={7} spacing="6">
+      <SimpleGrid columns={7} spacing="2">
         {weekDays}
       </SimpleGrid>
     );
