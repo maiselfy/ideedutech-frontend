@@ -3,6 +3,13 @@ import {
   AvatarGroup,
   Box,
   Button,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
   Flex,
   Heading,
   HStack,
@@ -12,9 +19,10 @@ import {
   SimpleGrid,
   Spacer,
   Text,
+  useDisclosure,
   VStack,
 } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ProfessorSideBar from '@/components/professor/ProfessorSideBar';
 import {
   RiBookLine,
@@ -55,7 +63,11 @@ interface Exam {
 
 const ProfessorDashboard: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [selectedTask, setSelectedTask] = useState<Task>(null);
   const [exams, setExams] = useState<Exam[]>([]);
+  const taskRef = useRef();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   useEffect(() => {
     const getTasks = api.get('/tasks');
     const getExams = api.get('/exams');
@@ -68,14 +80,18 @@ const ProfessorDashboard: React.FC = () => {
   return (
     <Flex flexDirection="column">
       <ProfessorSideBar />
-      <SimpleGrid columns={3} spacing="4">
-        <Flex flex="1" flexDirection="column" p="4">
-          <Text fontSize="3xl" fontWeight="bold">
+      <SimpleGrid minChildWidth="300px" spacing="2">
+        <Flex flex="1" flexDirection="column" p="8">
+          <Text fontSize="3xl" fontWeight="bold" mb="4">
             Atividades
           </Text>
           <VStack spacing="4">
             {tasks.map((task: Task) => (
               <Flex
+                cursor="pointer"
+                ref={taskRef}
+                colorScheme="teal"
+                onClick={() => {setSelectedTask(task); onOpen()}}
                 key={task.id}
                 bgColor="gray.50"
                 w="100%"
@@ -143,8 +159,8 @@ const ProfessorDashboard: React.FC = () => {
             ))}
           </VStack>
         </Flex>
-        <Flex flex="1" flexDirection="column" p="4">
-          <Text fontSize="3xl" fontWeight="bold">
+        <Flex flex="1" flexDirection="column" p="8" mr="-40">
+          <Text fontSize="3xl" fontWeight="bold" mb="4">
             Avaliações
           </Text>
           <VStack spacing="4">
@@ -175,13 +191,81 @@ const ProfessorDashboard: React.FC = () => {
             ))}
           </VStack>
         </Flex>
-        <Flex bgColor="gray.50" height="100vh" flexDir="column" p="4">
-          <Text fontSize="3xl" fontWeight="bold">
-            Atividades
-          </Text>
-          <Calendar />
+        <Flex w="100%" justifyContent="flex-end">
+          <Flex bgColor="gray.50" flexDir="column" p="8">
+            <Text fontSize="3xl" fontWeight="bold">
+              Atividades
+            </Text>
+            <Calendar />
+            <Text fontSize="3xl" fontWeight="bold">
+              Aulas de Hoje
+            </Text>
+            <VStack spacing="4">
+              {exams.map((exam: Exam) => (
+                <Flex w="100%" p="4" borderRadius="md">
+                  <Box mr="4" textAlign="center">
+                    <Text fontWeight="bold" fontSize="lg">
+                      {format(new Date(exam.date), 'MMMM, dd')}
+                    </Text>
+                    <Text fontSize="smaller">{`${exam.initialHour} - ${exam.endHour}`}</Text>
+                  </Box>
+                  <Box>
+                    <Text>Aula Exemplo</Text>
+                    <HStack spacing="4" w="100%">
+                      <Icon as={RiBookLine} />
+                      <Text fontSize="smaller">{exam.discipline}</Text>
+                      <Icon as={RiTeamLine} />
+                      <Text fontSize="smaller">{exam.class.name}</Text>
+                    </HStack>
+                  </Box>
+                </Flex>
+              ))}
+            </VStack>
+          </Flex>
         </Flex>
       </SimpleGrid>
+
+      <Drawer
+        isOpen={isOpen}
+        placement="right"
+        onClose={onClose}
+        finalFocusRef={taskRef}
+        size="md"
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>
+            <Flex justifyContent="center" align="center">
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                w="12"
+                h="12"
+                bg="green.100"
+                mr="2"
+                borderRadius="md"
+              >
+                <Img
+                  w="8"
+                  h="8"
+                  src="https://user-images.githubusercontent.com/49327985/157252598-251b1303-680c-456f-9ff1-6dfe380750ce.png"
+                />
+              </Box>
+              <Box>
+                <Text fontSize="x-small">
+                  {selectedTask?.type.toUpperCase()}
+                </Text>
+                <Text fontWeight="medium">{selectedTask?.title}</Text>
+              </Box>
+              <Spacer />
+            </Flex>
+          </DrawerHeader>
+
+          <DrawerBody>{/* <Input placeholder='Type here...' /> */}</DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </Flex>
   );
 };

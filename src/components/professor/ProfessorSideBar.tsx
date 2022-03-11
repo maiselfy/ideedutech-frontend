@@ -18,7 +18,11 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import React from 'react';
-import { RiLogoutCircleLine } from 'react-icons/ri';
+import {
+  RiArrowLeftSLine,
+  RiArrowRightSLine,
+  RiLogoutCircleLine,
+} from 'react-icons/ri';
 
 const ProfessorSideBar: React.FC = () => {
   return (
@@ -33,7 +37,7 @@ const ProfessorSideBar: React.FC = () => {
         padding="4"
         src="https://user-images.githubusercontent.com/49327985/154309877-cd022fe2-feb8-4193-b61a-baea24104eec.svg"
       />
-      <HStack spacing="4">
+      <HStack spacing="4" ml="8">
         <Link color="green.600" fontWeight="bold">
           Início
         </Link>
@@ -42,7 +46,7 @@ const ProfessorSideBar: React.FC = () => {
         <Link>Atividades</Link>
       </HStack>
       <Spacer />
-      <Button colorScheme="green" size="lg">
+      <Button colorScheme="green" size="lg" mr="8" rightIcon={<RiArrowRightSLine />}>
         NOVO
       </Button>
       <Popover>
